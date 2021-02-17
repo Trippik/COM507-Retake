@@ -23,22 +23,24 @@ class Agent:
     
     def set_environment(self, environment):
         self.environment = environment
+        self.environment.set_agents(self)
 
 class Environment:
     def set_size(self, x, y):
         self.size = [x,y]
+        self.agents = []
 
     def get_size(self):
         return(self.size)
     
-    def set_agents(self, agents):
-        self.agents = agents
+    def set_agents(self, agent):
+        self.agents = self.agents + [agent,]
     
     def get_agents(self):
         return(self.agents)
     
     def clear_environment(self):
-        self.agents = None
+        self.agents = []
 
 #-----TESTING CODE-----    
 #test_agent = Agent(1, 1)
