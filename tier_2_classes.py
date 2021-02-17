@@ -1,6 +1,15 @@
 #-----IMPORT NECESSARY CLASSES AND LIBRARIES-----
 import base_classes
+from random import seed
+from random import randint
 
+#-----BASIC FUNCTIONS-----
+def generate_coordinates(max_x, max_y):
+    rand_x = randint(0, max_x)
+    rand_y = randint(0, max_y)
+    return([rand_x, rand_y])
+
+#-----CLASSES-----
 class Mars(base_classes.Environment):
     pass
 
@@ -9,6 +18,7 @@ class Rover(base_classes.Agent):
         self.battery_level = battery_level
         self.ship_position = ship_position
         self.inventory = None
+        self.mode = 0
         super().__init__(rover_position[0], rover_position[1])
     
     def move(self, vector, battery_change):
@@ -18,6 +28,8 @@ class Rover(base_classes.Agent):
             new_y = current_loc[1] + vector[1]
             self.setter(new_x, new_y)
             self.battery_level = self.battery_level - battery_change
+    
+    def collect(self)
 
 class Rock(base_classes.Agent):
     def __init__(self, rock_position, energy):
@@ -56,11 +68,28 @@ class Spaceship(base_classes.Agent):
         targets = targets + [(x_target_m, y_target_p), (x_target_p, y_target_m)]
         self.scan(targets)
 
-
+class Simulation:
+    def __init__(self, mars_size, no_rovers, no_rocks):
+        self.mars = Mars(mars_size[0], mars_size[1])
+        ship_coor = generate_coordinates(mars_size[0], mars_size[1])
+        self.ship = Spaceship(ship_coor)
+        while(no_rovers > 0):
+            rover_coor = generate_coordinates(mars_size[0], mars_size[1])
+            rover = Rover(rover_coor, ship_coor, 100)
+            rover.set_environment(self.mars)
+            no_rovers = no_rovers - 1
+        while(no_rocks > 0):
+            rock_coor = generate_coordinates(mars_size[0], mars_size[1])
+            rock = Rock(rock_coor, 50)
+            rock.set_environment(self.mars)
+            no_rovers = no_rovers - 1
+    
+    def act(self):
+        
 
 #-----TESTING OF MARS CLASS-----
-test_mars = Mars()
-test_mars.set_size(5,5)
+#test_mars = Mars()
+#test_mars.set_size(5,5)
 #print(test_mars.get_size())
 
 #-----TESTING OF ROVER CLASS-----
