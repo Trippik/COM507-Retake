@@ -3,16 +3,21 @@ import base_classes
 from random import seed
 from random import randint
 
+
 #-----BASIC FUNCTIONS-----
 def generate_coordinates(max_x, max_y):
     rand_x = randint(0, max_x)
     rand_y = randint(0, max_y)
     return([rand_x, rand_y])
 
+
 #-----CLASSES-----
+#MARS CLASS
 class Mars(base_classes.Environment):
     pass
 
+
+#ROVER CLASS
 class Rover(base_classes.Agent):
     def __init__(self, rover_position, ship_position, battery_level):
         self.battery_level = battery_level
@@ -20,40 +25,60 @@ class Rover(base_classes.Agent):
         self.inventory = None
         self.mode = 0
         super().__init__(rover_position[0], rover_position[1])
-    
+
+    #Move rover along defined vector and deplete battery
     def move(self, vector, battery_change):
         if(self.battery_level > battery_change):
             current_loc = self.getter()
+            if(self.mode == 1):
+                vector_x = current_loc[0] - self.ship_position[0]
+                vector_y = current_loc[1] - self.ship_position[1]
+                vector = (vector_x, vector_y)
             new_x = current_loc[0] + vector[0]
             new_y = current_loc[1] + vector[1]
             self.setter(new_x, new_y)
             self.battery_level = self.battery_level - battery_change
     
-    def collect(self)
+    #If in collection mode collect rock at current coordinates
+    def collect(self):
+        if(self.mode == 0):
+            for agent in self.environment.get_agents():
+                if(type(agent) is Rock):
+                    if (agent.getter() == self.getter()):
+                        self.inventory = agent
+                        self.mode = 1
 
+
+#ROCK CLASS
 class Rock(base_classes.Agent):
     def __init__(self, rock_position, energy):
         self.energy = energy
         super().__init__(rock_position[0], rock_position[1])
     
+    #Drop energy level by set amount
     def energy_drop(self, drop_rate):
         if(self.energy > drop_rate):
             self.energy = self.energy - drop_rate
 
+
+#SPACESHIP CLASS
 class Spaceship(base_classes.Agent):
     def __init__(self, ship_position):
         self.inventory = []
         super().__init__(ship_position[0], ship_position[1])
     
+    #Scan specifc cell for Rover, if found empty inventory and recharge
     def scan(self, targets):
         agents = self.environment.get_agents()
         for target in targets:
             for agent in agents:
-                if((target == agent.getter()) and (type(agent).__name__) == Rover):
+                if((target == agent.getter()) and (type(agent) is Rover)):
                     if(agent.inventory != None):
                         self.inventory = self.inventory + [agent.inventory, ]
+                        agent.mode = 0
                 agent.battery_level = 100
 
+    #Scan all cells within a 1 cell radius of the ship
     def scan_charge(self):
         ship_loc = self.getter()
         x = ship_loc[0]
@@ -68,9 +93,12 @@ class Spaceship(base_classes.Agent):
         targets = targets + [(x_target_m, y_target_p), (x_target_p, y_target_m)]
         self.scan(targets)
 
+
+#SIMULATION CLASS
 class Simulation:
     def __init__(self, mars_size, no_rovers, no_rocks):
-        self.mars = Mars(mars_size[0], mars_size[1])
+        self.mars = Mars()
+        self.mars.set_size(mars_size[0], mars_size[1])
         ship_coor = generate_coordinates(mars_size[0], mars_size[1])
         self.ship = Spaceship(ship_coor)
         while(no_rovers > 0):
@@ -82,9 +110,19 @@ class Simulation:
             rock_coor = generate_coordinates(mars_size[0], mars_size[1])
             rock = Rock(rock_coor, 50)
             rock.set_environment(self.mars)
-            no_rovers = no_rovers - 1
+            no_rocks = no_rocks - 1
     
+    #Complete 1 cycle of actions on all agents in simulation
     def act(self):
+        agents = self.mars.get_agents()
+        for agent in agents:
+            if(type(agent) is Rock):
+                agent.energy_drop(1)
+            elif(type(agent) is Rover):
+                agent.move([0,1], 10)
+                agent.collect()
+            elif(type(agent) is Spaceship):
+                agent.scan_charge()
         
 
 #-----TESTING OF MARS CLASS-----
@@ -111,3 +149,14 @@ class Simulation:
 #print(test_rover.battery_level)
 #test_ship.scan_charge()
 #print(test_rover.battery_level)
+
+#-----TESTING OF SIMULATION CLASS-----
+test_sim = Simulation([5,5], 3, 10)
+counter = 10
+while(counter > 0):
+    test_sim.act()
+    counter = counter - 1
+agents = test_sim.mars.get_agents()
+for agent in agents:
+    if(type(agent) is Rover):
+        print(agent.inventory)
