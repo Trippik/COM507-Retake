@@ -47,6 +47,41 @@ class Rover(base_classes.Agent):
                     if (agent.getter() == self.getter()):
                         self.inventory = agent
                         self.mode = 1
+    
+    def scan(self, targets, item):
+        agents = self.environment.get_agents()
+        results = ()
+        for target in targets:
+            for agent in agents:
+                if((target == agent.getter()) and (type(agent) is item)):
+                    results = results + (target,)
+        return(results)
+
+    def look(self, item):
+        rover_loc = self.getter()
+        targets = []
+        x = rover_loc[0]
+        y = rover_loc[1]
+        x_target_m = x - 1
+        y_target_m = x - 1
+        targets = targets + [(x, y_target_m), (x_target_m, y), (x_target_m, y_target_m),]
+        x_target_p = x + 1
+        y_target_p = x + 1
+        targets = targets + [(x, y_target_p), (x_target_p, y), (x_target_p, y_target_p),]
+        targets = targets + [(x_target_m, y_target_p), (x_target_p, y_target_m)]
+        results = self.scan(targets, item)
+        return(results)
+    
+    def act(self):
+        self.collect()
+        rock_coor = self.look(Rock)
+        vector = []
+        if(rock_coor != ()):
+            vector = [rock_coor[0][0], rock_coor[0][1]]
+        else:
+            vector = [1,1]
+        self.move(vector, 1)
+
 
 
 #ROCK CLASS
@@ -59,6 +94,9 @@ class Rock(base_classes.Agent):
     def energy_drop(self, drop_rate):
         if(self.energy > drop_rate):
             self.energy = self.energy - drop_rate
+    
+    def act(self):
+        self.energy_drop(2)
 
 
 #SPACESHIP CLASS
@@ -92,6 +130,9 @@ class Spaceship(base_classes.Agent):
         targets = targets + [(x, y_target_p), (x_target_p, y), (x_target_p, y_target_p),]
         targets = targets + [(x_target_m, y_target_p), (x_target_p, y_target_m)]
         self.scan(targets)
+    
+    def act(self):
+        self.scan_charge()
 
 
 #SIMULATION CLASS
@@ -113,16 +154,12 @@ class Simulation:
             no_rocks = no_rocks - 1
     
     #Complete 1 cycle of actions on all agents in simulation
-    def act(self):
+    def run(self, loops):
         agents = self.mars.get_agents()
-        for agent in agents:
-            if(type(agent) is Rock):
-                agent.energy_drop(1)
-            elif(type(agent) is Rover):
-                agent.move([0,1], 10)
-                agent.collect()
-            elif(type(agent) is Spaceship):
-                agent.scan_charge()
+        while(loops > 0):
+            for agent in agents:
+                agent.act()
+                loops = loops - 1
         
 
 #-----TESTING OF MARS CLASS-----
@@ -151,11 +188,8 @@ class Simulation:
 #print(test_rover.battery_level)
 
 #-----TESTING OF SIMULATION CLASS-----
-test_sim = Simulation([5,5], 3, 10)
-counter = 10
-while(counter > 0):
-    test_sim.act()
-    counter = counter - 1
+test_sim = Simulation([5,5], 5, 10)
+test_sim.run(40)
 agents = test_sim.mars.get_agents()
 for agent in agents:
     if(type(agent) is Rover):
