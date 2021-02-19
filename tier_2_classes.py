@@ -47,6 +47,7 @@ class Rover(base_classes.Agent):
                     if (agent.getter() == self.getter()):
                         self.inventory = agent
                         self.mode = 1
+                        print("Rock Found!!!!")
     
     def scan(self, targets, item):
         agents = self.environment.get_agents()
@@ -72,14 +73,37 @@ class Rover(base_classes.Agent):
         results = self.scan(targets, item)
         return(results)
     
+    def direction_determine(self, value):
+        final = 0
+        if(value > 1):
+            final = 1
+        elif(value < 1):
+            final = -1
+        return(final)
+
     def act(self):
-        self.collect()
-        rock_coor = self.look(Rock)
         vector = []
-        if(rock_coor != ()):
-            vector = [rock_coor[0][0], rock_coor[0][1]]
-        else:
-            vector = [1,1]
+        if(self.mode == 0):
+            self.collect()
+            rock_coor = self.look(Rock)
+            if(rock_coor != ()):
+                vector = [rock_coor[0][0], rock_coor[0][1]]
+            else:
+                vector = [1,1]
+        elif(self.mode == 1):
+            rover_loc = self.getter()
+            x_raw = self.ship_position[0] - rover_loc[0]
+            y_raw = self.ship_position[1] - rover_loc[1]
+            print("Rover Location: " + str(rover_loc))
+            print("Ship Location: " + str(self.ship_position))
+            print("X Distance from Ship: " + str(x_raw))
+            print("Y Distance from Ship: " + str(y_raw))
+            x = self.direction_determine(x_raw)
+            y = self.direction_determine(y_raw)
+            vector = [x,y]
+            print("Return Vector: " + str(vector))
+            print("-------------------------------------------------------------------------")
+            print()
         self.move(vector, 1)
 
 
@@ -159,7 +183,7 @@ class Simulation:
         while(loops > 0):
             for agent in agents:
                 agent.act()
-                loops = loops - 1
+            loops = loops - 1
         
 
 #-----TESTING OF MARS CLASS-----
@@ -188,9 +212,5 @@ class Simulation:
 #print(test_rover.battery_level)
 
 #-----TESTING OF SIMULATION CLASS-----
-test_sim = Simulation([5,5], 5, 10)
-test_sim.run(40)
-agents = test_sim.mars.get_agents()
-for agent in agents:
-    if(type(agent) is Rover):
-        print(agent.inventory)
+test_sim = Simulation([5,5], 1, 100)
+test_sim.run(2)
