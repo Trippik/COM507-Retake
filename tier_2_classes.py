@@ -29,13 +29,14 @@ class Rover(base_classes.Agent):
     #Move rover along defined vector and deplete battery
     def move(self, vector, battery_change):
         if(self.battery_level > battery_change):
+            print(str(vector))
+            print(self.mode)
             current_loc = self.getter()
-            if(self.mode == 1):
-                vector_x = current_loc[0] - self.ship_position[0]
-                vector_y = current_loc[1] - self.ship_position[1]
-                vector = (vector_x, vector_y)
             new_x = current_loc[0] + vector[0]
+            print("New x: " + str(new_x))
             new_y = current_loc[1] + vector[1]
+            print("New y: " + str(new_y))
+            input()
             self.setter(new_x, new_y)
             self.battery_level = self.battery_level - battery_change
     
@@ -213,4 +214,4 @@ class Simulation:
 
 #-----TESTING OF SIMULATION CLASS-----
 test_sim = Simulation([5,5], 1, 100)
-test_sim.run(2)
+test_sim.run(10)
