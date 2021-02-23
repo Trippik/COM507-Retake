@@ -29,14 +29,9 @@ class Rover(base_classes.Agent):
     #Move rover along defined vector and deplete battery
     def move(self, vector, battery_change):
         if(self.battery_level > battery_change):
-            print(str(vector))
-            print(self.mode)
             current_loc = self.getter()
             new_x = current_loc[0] + vector[0]
-            print("New x: " + str(new_x))
             new_y = current_loc[1] + vector[1]
-            print("New y: " + str(new_y))
-            input()
             self.setter(new_x, new_y)
             self.battery_level = self.battery_level - battery_change
     
@@ -48,7 +43,6 @@ class Rover(base_classes.Agent):
                     if (agent.getter() == self.getter()):
                         self.inventory = agent
                         self.mode = 1
-                        print("Rock Found!!!!")
     
     def scan(self, targets, item):
         agents = self.environment.get_agents()
@@ -95,16 +89,9 @@ class Rover(base_classes.Agent):
             rover_loc = self.getter()
             x_raw = self.ship_position[0] - rover_loc[0]
             y_raw = self.ship_position[1] - rover_loc[1]
-            print("Rover Location: " + str(rover_loc))
-            print("Ship Location: " + str(self.ship_position))
-            print("X Distance from Ship: " + str(x_raw))
-            print("Y Distance from Ship: " + str(y_raw))
             x = self.direction_determine(x_raw)
             y = self.direction_determine(y_raw)
             vector = [x,y]
-            print("Return Vector: " + str(vector))
-            print("-------------------------------------------------------------------------")
-            print()
         self.move(vector, 1)
 
 
@@ -135,7 +122,8 @@ class Spaceship(base_classes.Agent):
         agents = self.environment.get_agents()
         for target in targets:
             for agent in agents:
-                if((target == agent.getter()) and (type(agent) is Rover)):
+                agent_coor = agent.getter()
+                if((target == agent_coor) and (type(agent) is Rover)):
                     if(agent.inventory != None):
                         self.inventory = self.inventory + [agent.inventory, ]
                         agent.mode = 0
@@ -146,14 +134,14 @@ class Spaceship(base_classes.Agent):
         ship_loc = self.getter()
         x = ship_loc[0]
         y = ship_loc[1]
-        targets = []
+        targets = ()
         x_target_m = x - 1
         y_target_m = x - 1
-        targets = targets + [(x, y_target_m), (x_target_m, y), (x_target_m, y_target_m),]
+        targets = targets + ([x, y_target_m], [x_target_m, y], [x_target_m, y_target_m],)
         x_target_p = x + 1
         y_target_p = x + 1
-        targets = targets + [(x, y_target_p), (x_target_p, y), (x_target_p, y_target_p),]
-        targets = targets + [(x_target_m, y_target_p), (x_target_p, y_target_m)]
+        targets = targets + ([x, y_target_p], [x_target_p, y], [x_target_p, y_target_p],)
+        targets = targets + ([x_target_m, y_target_p], [x_target_p, y_target_m],)
         self.scan(targets)
     
     def act(self):
@@ -167,6 +155,7 @@ class Simulation:
         self.mars.set_size(mars_size[0], mars_size[1])
         ship_coor = generate_coordinates(mars_size[0], mars_size[1])
         self.ship = Spaceship(ship_coor)
+        self.ship.set_environment(self.mars)
         while(no_rovers > 0):
             rover_coor = generate_coordinates(mars_size[0], mars_size[1])
             rover = Rover(rover_coor, ship_coor, 100)
@@ -215,3 +204,4 @@ class Simulation:
 #-----TESTING OF SIMULATION CLASS-----
 test_sim = Simulation([5,5], 1, 100)
 test_sim.run(10)
+print(str(test_sim.ship.inventory))
