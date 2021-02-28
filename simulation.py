@@ -38,6 +38,13 @@ class Simulation:
             for agent in agents:
                 agent.act()
             loops = loops - 1
+        agents = self.mars.get_agents()
+        results = []
+        for agent in agents:
+            agent_type = type(agent)
+            agent_location = agent.getter()
+            results = results + [(agent_type, agent_location),]
+        return(results)
 
 #-----TESTING OF SIMULATION CLASS-----
 #test_sim = Simulation([5,5], 1, 1000)
