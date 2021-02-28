@@ -1,9 +1,9 @@
 #-----IMPORT NECESSARY CLASSES AND LIBRARIES-----
-import base_classes.agent as agent
-import rock as rock
+from agent import Agent
+from rock import Rock
 
 #ROVER CLASS
-class Rover(agent.Agent):
+class Rover(Agent):
     def __init__(self, rover_position, ship_position, battery_level):
         self.battery_level = battery_level
         self.ship_position = ship_position
@@ -24,7 +24,7 @@ class Rover(agent.Agent):
     def collect(self):
         if(self.mode == 0):
             for agent in self.environment.get_agents():
-                if(type(agent) is rock.Rock):
+                if(type(agent) is Rock):
                     if (agent.getter() == self.getter()):
                         self.inventory = agent
                         self.mode = 1
@@ -65,7 +65,7 @@ class Rover(agent.Agent):
         vector = []
         if(self.mode == 0):
             self.collect()
-            rock_coor = self.look(rock.Rock)
+            rock_coor = self.look(Rock)
             if(rock_coor != ()):
                 vector = [rock_coor[0][0], rock_coor[0][1]]
             else:

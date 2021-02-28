@@ -1,9 +1,9 @@
 #-----IMPORT NECESSARY CLASSES AND LIBRARIES-----
-import base_classes.agent as agent
-import rover as rover
+from agent import Agent
+from rover import Rover
 
 #SPACESHIP CLASS
-class Spaceship(agent.Agent):
+class Spaceship(Agent):
     def __init__(self, ship_position):
         self.inventory = []
         super().__init__(ship_position[0], ship_position[1])
@@ -14,7 +14,7 @@ class Spaceship(agent.Agent):
         for target in targets:
             for agent in agents:
                 agent_coor = agent.getter()
-                if((target == agent_coor) and (type(agent) is rover.Rover)):
+                if((target == agent_coor) and (type(agent) is Rover)):
                     if(agent.inventory != None):
                         self.inventory = self.inventory + [agent.inventory, ]
                         agent.mode = 0

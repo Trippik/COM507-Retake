@@ -1,8 +1,8 @@
 #-----IMPORT NECESSARY CLASSES AND LIBRARIES-----
-import base_classes.environment as environment
+from environment import Environment
 
 #MARS CLASS
-class Mars(environment.Environment):
+class Mars(Environment):
     pass
 
 #-----TESTING OF MARS CLASS-----

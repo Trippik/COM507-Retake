@@ -1,8 +1,8 @@
 #-----IMPORT NECESSARY CLASSES AND LIBRARIES-----
-import base_classes.agent as agent
+from agent import Agent
 
 #ROCK CLASS
-class Rock(agent.Agent):
+class Rock(Agent):
     def __init__(self, rock_position, energy):
         self.energy = energy
         super().__init__(rock_position[0], rock_position[1])
