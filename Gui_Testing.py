@@ -13,14 +13,11 @@ height = 600
 width = 600
 
 C = tkinter.Canvas(top, bg="blue", height=height, width=width)
-b = tkinter.Button(top, text="Cycle Simulation", command = sim.run(1))
-
-coord = 10, 50, 240, 210
 block_size = block_size(sim_dimensions, height, width)
+
 arc = C.create_rectangle(0, 0, block_size[0], block_size[1],
     outline="#fb0", fill="#fb0")
 
 
 C.pack()
-b.pack()
 top.mainloop()
