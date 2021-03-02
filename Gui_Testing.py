@@ -2,6 +2,7 @@ import tkinter
 from spaceship import Spaceship
 from rover import Rover
 from rock import Rock
+import time
 
 class gui:
     def __init__(self, sim, canvas_size):
@@ -21,21 +22,20 @@ class gui:
         return((top_coor, bottom_coor))
 
     def refresh_items(self):
-        self.C.delete(all)
-        agents = self.sim.mars.get_agents()
-        for agent in agents:
-            location = agent.getter()
-            raw = self.block_coor_generate(location)
-            top_coor = raw[0]
-            bottom_coor = raw[1]
-            if(type(agent) is Spaceship):
-                self.C.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1],outline="slate gray", fill="slate gray")
-            elif(type(agent) is Rover):
-                self.C.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1],outline="green3", fill="green3")
-            elif(type(agent) is Rock):
-                self.C.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1],outline="dark violet", fill="dark violet")
-
-    
-    def draw(self):
-        self.C.pack()
-        self.top.mainloop()
+        while True:
+            self.sim.run(1)
+            self.C.delete(all)
+            agents = self.sim.mars.get_agents()
+            for agent in agents:
+                location = agent.getter()
+                raw = self.block_coor_generate(location)
+                top_coor = raw[0]
+                bottom_coor = raw[1]
+                if(type(agent) is Spaceship):
+                    self.C.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1],outline="slate gray", fill="slate gray")
+                elif(type(agent) is Rover):
+                    self.C.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1],outline="green3", fill="green3")
+                elif(type(agent) is Rock):
+                    self.C.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1],outline="dark violet", fill="dark violet")
+            self.C.pack()
+            self.top.update()
