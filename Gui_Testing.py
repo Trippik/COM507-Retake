@@ -18,7 +18,7 @@ class gui:
         self.graphics = []
         self.build_graphics()
         self.canvas.pack()
-        self.animation()
+        self.movement()
         self.window.mainloop()
     
     def initial_block_coor_generate(self, location):
@@ -30,6 +30,14 @@ class gui:
         coor = [location[0] * self.block_size[0], location[1] * self.block_size[1]]
         return(coor)
 
+    def movement(self):
+        for element in self.graphics:
+            graphic = element[0]
+            agent = element[1]
+            if(type(agent) is Rover):
+                self.canvas.move(graphic, 60, 60) 
+        self.canvas.after(1000, self.movement) 
+
     def build_graphics(self):
         agents = self.sim.mars.get_agents()
         for agent in agents:
@@ -37,24 +45,13 @@ class gui:
             coors = self.initial_block_coor_generate(location)
             top_coor = coors[0]
             bottom_coor = coors[1]
-            if(type(agent) is Spaceship):
+            if(type(agent) is Rock):
+                new_graphic = self.canvas.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1], outline="dark violet", fill="dark violet")
+                print("Built a Rock")
+            elif(type(agent) is Spaceship):
                 new_graphic = self.canvas.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1], outline="black", fill="slate gray")
                 print("Built a Spaceship")
             elif(type(agent) is Rover):
                 new_graphic = self.canvas.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1], outline="black", fill="green3")
                 print("Built a Rover")
-            elif(type(agent) is Rock):
-                new_graphic = self.canvas.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1], outline="dark violet", fill="dark violet")
-                print("Built a Rock")
-            self.graphics = self.graphics + [(new_graphic, agent),]
-    
-    def animation(self):
-        self.sim.run(1)
-        for item in self.graphics:
-            if(type(item[1]) is Rover):
-                location = item[1].getter()
-                print(str(item[1]) + " moved")
-                coor = self.block_coor_generate(location)
-                self.canvas.move(item, coor[0], coor[1])
-                self.canvas.update()
-        self.window.after(2000, self.animation)
+            self.graphics = self.graphics + [[new_graphic, agent],]
