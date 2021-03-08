@@ -35,8 +35,10 @@ class gui:
             graphic = element[0]
             agent = element[1]
             if(type(agent) is Rover):
-                self.canvas.move(graphic, 60, 60) 
-        self.canvas.after(1000, self.movement) 
+                location = self.block_coor_generate(agent.getter())
+                print(str(location))
+                self.canvas.move(graphic, location[0], location[1]) 
+        self.canvas.after(5000, self.movement) 
 
     def build_graphics(self):
         agents = self.sim.mars.get_agents()
@@ -46,7 +48,7 @@ class gui:
             top_coor = coors[0]
             bottom_coor = coors[1]
             if(type(agent) is Rock):
-                new_graphic = self.canvas.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1], outline="dark violet", fill="dark violet")
+                new_graphic = self.canvas.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1], outline="black", fill="dark violet")
                 print("Built a Rock")
             elif(type(agent) is Spaceship):
                 new_graphic = self.canvas.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1], outline="black", fill="slate gray")
