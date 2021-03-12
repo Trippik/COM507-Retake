@@ -15,7 +15,7 @@ class App(tk.Tk):
         self.f_data = [] 
 
         for num in range(0, 400, 5): # make up a set of fake data
-            self.f_data.append([num, num, num+10, num+10])
+            self.f_data.append([num, num, num+40, num+40])
 
     def next_frame(self):
         data = self.f_data[self.f_index] # fetch frame data
