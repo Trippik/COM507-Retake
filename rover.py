@@ -15,6 +15,7 @@ class Rover(Agent):
     def move(self, vector, battery_change):
         if(self.battery_level > battery_change):
             current_loc = self.getter()
+            print("Current Location: " + str(current_loc))
             new_x = current_loc[0] + vector[0]
             new_y = current_loc[1] + vector[1]
             self.setter(new_x, new_y)
@@ -70,6 +71,7 @@ class Rover(Agent):
                 vector = [rock_coor[0][0], rock_coor[0][1]]
             else:
                 vector = [1,1]
+            vector = [1,1]
         elif(self.mode == 1):
             rover_loc = self.getter()
             x_raw = self.ship_position[0] - rover_loc[0]
@@ -81,6 +83,9 @@ class Rover(Agent):
 
 #-----TESTING OF ROVER CLASS-----
 #test_rover = Rover([1,1], [0,1], 100)
+#test_rover.move([1, -1], 3)
+#test_rover.move([1, -1], 3)
+#test_rover.move([1, -1], 3)
 #test_rover.move([1, -1], 3)
 #print(test_rover.getter())
 #print(test_rover.battery_level)

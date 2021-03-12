@@ -17,11 +17,11 @@ class Simulation:
     def __init__(self, mars_size, no_rovers, no_rocks):
         self.mars = Mars()
         self.mars.set_size(mars_size[0], mars_size[1])
-        ship_coor = generate_coordinates(mars_size[0], mars_size[1])
+        ship_coor = [5,5]
         self.ship = Spaceship(ship_coor)
         self.ship.set_environment(self.mars)
         while(no_rovers > 0):
-            rover_coor = generate_coordinates(mars_size[0], mars_size[1])
+            rover_coor = ship_coor
             rover_new = Rover(rover_coor, ship_coor, 100)
             rover_new.set_environment(self.mars)
             no_rovers = no_rovers - 1

@@ -1,6 +1,6 @@
 from simulation import Simulation
-from Gui_Testing import gui
+from gui import Gui
 import time
 
-sim = Simulation([10,10], 4, 10)
-window = gui(sim, [600,600])
+sim = Simulation([30,30], 4, 10)
+window = Gui(sim, [600,600])

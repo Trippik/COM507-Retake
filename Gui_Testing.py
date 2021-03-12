@@ -8,11 +8,13 @@ class gui:
     def __init__(self, sim, canvas_size):
         self.sim = sim
         sim_dimensions = self.sim.mars.get_size()
+        self.canvas_size = canvas_size
         width = canvas_size[0]
         height = canvas_size[1]
         block_x = width / sim_dimensions[0]
         block_y = height / sim_dimensions[1]
         self.block_size = [block_x, block_y]
+        print("Block Size: " + str(self.block_size))
         self.window = tkinter.Tk()
         self.canvas = tkinter.Canvas(self.window, bg="saddle brown", height=height, width=width)
         self.graphics = []
@@ -27,6 +29,8 @@ class gui:
         return((top_coor, bottom_coor))
     
     def block_coor_generate(self, location):
+        print("Block Coor Gen X: " + str(location[0] * self.block_size[0]))
+        print("Block Coor Gen Y: " + str(location[1] * self.block_size[1]))
         coor = [location[0] * self.block_size[0], location[1] * self.block_size[1]]
         return(coor)
 
@@ -35,10 +39,9 @@ class gui:
             graphic = element[0]
             agent = element[1]
             if(type(agent) is Rover):
-                location = self.block_coor_generate(agent.getter())
-                print(str(location))
-                self.canvas.move(graphic, location[0], location[1]) 
-        self.canvas.after(5000, self.movement) 
+                loc = self.block_coor_generate(agent.getter())
+                self.canvas.move(graphic, loc[0], loc[1])
+        self.canvas.after(10000, self.movement) 
 
     def build_graphics(self):
         agents = self.sim.mars.get_agents()
@@ -49,11 +52,8 @@ class gui:
             bottom_coor = coors[1]
             if(type(agent) is Rock):
                 new_graphic = self.canvas.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1], outline="black", fill="dark violet")
-                print("Built a Rock")
             elif(type(agent) is Spaceship):
                 new_graphic = self.canvas.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1], outline="black", fill="slate gray")
-                print("Built a Spaceship")
             elif(type(agent) is Rover):
                 new_graphic = self.canvas.create_rectangle(top_coor[0], top_coor[1], bottom_coor[0], bottom_coor[1], outline="black", fill="green3")
-                print("Built a Rover")
             self.graphics = self.graphics + [[new_graphic, agent],]
