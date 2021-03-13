@@ -27,8 +27,8 @@ class Simulation:
             no_rocks = no_rocks - 1
     
     def generate_coordinates(self):
-        rand_x = randint(0, (self.mars_size[0] - 1))
-        rand_y = randint(0, (self.mars_size[1] - 1))
+        rand_x = randint(0, (self.mars_size[0] - 2))
+        rand_y = randint(0, (self.mars_size[1] - 2))
         return([rand_x, rand_y])
 
     #Complete 1 cycle of actions on all agents in simulation
@@ -38,12 +38,12 @@ class Simulation:
             for agent in agents:
                 agent.act()
             loops = loops - 1
+            print(str(self.ship.inventory))
         agents = self.mars.get_agents()
         results = []
         for agent in agents:
-            agent_type = type(agent)
             agent_location = agent.getter()
-            results = results + [(agent_type, agent_location),]
+            results = results + [(agent, agent_location),]
         return(results)
 
 #-----TESTING OF SIMULATION CLASS-----

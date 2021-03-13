@@ -14,7 +14,7 @@ class Gui(tk.Tk):
         self.c.pack()
         self.set = 10
         self.sim_size = [10,10]
-        self.sim = Simulation(self.sim_size, 3, 2)
+        self.sim = Simulation(self.sim_size, 3, 25)
         self.f_index = 0 # index so we know which frame to draw next
         # array to hold our frame data,
         # you'll probably need this to hold more than
@@ -41,13 +41,15 @@ class Gui(tk.Tk):
         results = self.iterate()
         self.c.delete('all') # clear canvas
         for result in results:
-            agent_type = result[0]
+            agent = result[0]
             data = result[1]
-            if(agent_type is Spaceship):
+            if(type(agent) is Spaceship):
                 fill_colour = "black"
-            elif(agent_type is Rock):
+            elif(type(agent) is Rock):
                 fill_colour = "dark violet"
-            elif(agent_type is Rover):
+                if(agent in self.sim.ship.inventory):
+                    fill_colour = "white"
+            elif(type(agent) is Rover):
                 fill_colour = "dark green"
             self.c.create_rectangle(data[0], data[1], data[2], data[3], outline="black", fill=fill_colour) # draw new frame data
         self.f_index += 1 # increment frame index

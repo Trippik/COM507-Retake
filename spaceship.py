@@ -16,6 +16,7 @@ class Spaceship(Agent):
                 agent_coor = agent.getter()
                 if((target == agent_coor) and (type(agent) is Rover)):
                     if(agent.inventory != None):
+                        print("Rock Delivered to Spaceship")
                         self.inventory = self.inventory + [agent.inventory, ]
                         agent.mode = 0
                 agent.battery_level = 100
@@ -36,6 +37,7 @@ class Spaceship(Agent):
         self.scan(targets)
     
     def act(self):
+        print("Spaceship Scanning")
         self.scan_charge()
 
 #-----TESTING OF SPACESHIP CLASS-----

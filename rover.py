@@ -1,6 +1,7 @@
 #-----IMPORT NECESSARY CLASSES AND LIBRARIES-----
 from agent import Agent
 from rock import Rock
+import random
 
 #ROVER CLASS
 class Rover(Agent):
@@ -27,7 +28,9 @@ class Rover(Agent):
                 if(type(agent) is Rock):
                     if (agent.getter() == self.getter()):
                         self.inventory = agent
+                        agent.setter = None
                         self.mode = 1
+                        print("Carrying Rock")
     
     def scan(self, targets, item):
         agents = self.environment.get_agents()
@@ -53,6 +56,24 @@ class Rover(Agent):
         results = self.scan(targets, item)
         return(results)
     
+    def generate_vector(self):
+        loc = self.getter()
+        vector = []
+        if(loc[0] == self.environment.get_size()[0]):
+            vector = vector + [-1,]
+        elif(loc[0] == 0):
+            vector = vector + [1,]
+        else:
+            vector = vector + [random.randint(-1,1),]
+
+        if(loc[1] == self.environment.get_size()[1]):
+            vector = vector + [-1,]
+        elif(loc[1] == 0):
+            vector = vector + [1,]
+        else:
+            vector = vector + [random.randint(-1,1),]
+        return(vector)
+
     def direction_determine(self, value):
         final = 0
         if(value > 1):
@@ -69,9 +90,9 @@ class Rover(Agent):
             if(rock_coor != ()):
                 vector = [rock_coor[0][0], rock_coor[0][1]]
             else:
-                vector = [1,1]
-            vector = [1,1]
+                vector = self.generate_vector()
         elif(self.mode == 1):
+            print("Returning to Spaceship")
             rover_loc = self.getter()
             x_raw = self.ship_position[0] - rover_loc[0]
             y_raw = self.ship_position[1] - rover_loc[1]
