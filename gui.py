@@ -9,18 +9,20 @@ class Gui(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.title("Mars Simulation")
-        self.c = tk.Canvas(self, width=400, height=400)
+        self.canvas_size = [400, 400]
+        self.c = tk.Canvas(self, width=self.canvas_size[0], height=self.canvas_size[1])
         self.c.pack()
         self.set = 10
-        self.sim = Simulation([10,10], 3, 2)
+        self.sim_size = [10,10]
+        self.sim = Simulation(self.sim_size, 3, 2)
         self.f_index = 0 # index so we know which frame to draw next
         # array to hold our frame data,
         # you'll probably need this to hold more than
         # just a set of coordinates to draw a line...
-        self.f_data = [0, 0, 40, 40] 
+        self.icon_dimension = [0, 0, 40, 40] 
 
         for num in range(0, 400, 5): # make up a set of fake data
-            self.f_data.append([num, num, num+10, num+10])
+            self.icon_dimension.append([num, num, num+10, num+10])
 
     def iterate(self):
         results = self.sim.run(1)
@@ -28,10 +30,10 @@ class Gui(tk.Tk):
         for result in results:
             agent_type = result[0]
             coordinates = result[1]
-            data_0 = self.f_data[0] + (self.set * coordinates[0])
-            data_1 = self.f_data[1] + (self.set * coordinates[1])
-            data_2 = self.f_data[2] + (self.set * coordinates[0])
-            data_3 = self.f_data[3] + (self.set * coordinates[1])
+            data_0 = ((self.canvas_size[0] / self.sim_size[0]) * coordinates[0]) + self.icon_dimension[0]
+            data_1 = ((self.canvas_size[1] / self.sim_size[1]) * coordinates[1]) + self.icon_dimension[1]
+            data_2 = ((self.canvas_size[0] / self.sim_size[0]) * coordinates[0]) + self.icon_dimension[2]
+            data_3 = ((self.canvas_size[1] / self.sim_size[1]) * coordinates[1]) + self.icon_dimension[3]
             final = final + [[agent_type,[data_0, data_1, data_2, data_3]],]
         return(final)
 
@@ -49,9 +51,9 @@ class Gui(tk.Tk):
                 fill_colour = "dark green"
             self.c.create_rectangle(data[0], data[1], data[2], data[3], outline="black", fill=fill_colour) # draw new frame data
         self.f_index += 1 # increment frame index
-        if (self.f_index >= len(self.f_data)): # check and wrap if at end of sequence
+        if (self.f_index >= len(self.icon_dimension)): # check and wrap if at end of sequence
             self.f_index = 0
-        self.c.after(50, self.next_frame) # call again after 50ms
+        self.c.after(2000, self.next_frame) # call again after 50ms
 
 if __name__ == "__main__":
     app = Gui()

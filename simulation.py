@@ -6,31 +6,31 @@ from rock import Rock
 from rover import Rover
 from spaceship import Spaceship
 
-#-----BASIC FUNCTIONS-----
-def generate_coordinates(max_x, max_y):
-    rand_x = randint(0, max_x)
-    rand_y = randint(0, max_y)
-    return([rand_x, rand_y])
-
 #SIMULATION CLASS
 class Simulation:
     def __init__(self, mars_size, no_rovers, no_rocks):
         self.mars = Mars()
         self.mars.set_size(mars_size[0], mars_size[1])
         ship_coor = [5,5]
+        self.mars_size = mars_size
         self.ship = Spaceship(ship_coor)
         self.ship.set_environment(self.mars)
         while(no_rovers > 0):
-            rover_coor = ship_coor
+            rover_coor = self.generate_coordinates()
             rover_new = Rover(rover_coor, ship_coor, 100)
             rover_new.set_environment(self.mars)
             no_rovers = no_rovers - 1
         while(no_rocks > 0):
-            rock_coor = generate_coordinates(mars_size[0], mars_size[1])
+            rock_coor = self.generate_coordinates()
             rock_new = Rock(rock_coor, 50)
             rock_new.set_environment(self.mars)
             no_rocks = no_rocks - 1
     
+    def generate_coordinates(self):
+        rand_x = randint(0, (self.mars_size[0] - 1))
+        rand_y = randint(0, (self.mars_size[1] - 1))
+        return([rand_x, rand_y])
+
     #Complete 1 cycle of actions on all agents in simulation
     def run(self, loops):
         agents = self.mars.get_agents()

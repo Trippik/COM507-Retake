@@ -15,7 +15,6 @@ class Rover(Agent):
     def move(self, vector, battery_change):
         if(self.battery_level > battery_change):
             current_loc = self.getter()
-            print("Current Location: " + str(current_loc))
             new_x = current_loc[0] + vector[0]
             new_y = current_loc[1] + vector[1]
             self.setter(new_x, new_y)
