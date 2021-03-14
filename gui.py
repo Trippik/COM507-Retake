@@ -27,6 +27,8 @@ class Gui(tk.Tk):
     def iterate(self):
         results = self.sim.run(1)
         final = []
+        print("Ship Inventory: " + str(len(self.sim.ship.inventory)) + "/25")
+        print("Collected Rocks: " + str(len(self.sim.ship.collected_rocks)) + "/25")
         for result in results:
             agent_type = result[0]
             coordinates = result[1]
@@ -52,6 +54,7 @@ class Gui(tk.Tk):
             elif(type(agent) is Rover):
                 fill_colour = "dark green"
             self.c.create_rectangle(data[0], data[1], data[2], data[3], outline="black", fill=fill_colour) # draw new frame data
+        
         self.f_index += 1 # increment frame index
         if (self.f_index >= len(self.icon_dimension)): # check and wrap if at end of sequence
             self.f_index = 0

@@ -5,9 +5,10 @@ import random
 
 #ROVER CLASS
 class Rover(Agent):
-    def __init__(self, rover_position, ship_position, battery_level):
+    def __init__(self, rover_position, ship, battery_level):
         self.battery_level = battery_level
-        self.ship_position = ship_position
+        self.ship = ship
+        self.ship_position = self.ship.getter()
         self.inventory = None
         self.mode = 0
         super().__init__(rover_position[0], rover_position[1])
@@ -26,9 +27,10 @@ class Rover(Agent):
         if(self.mode == 0):
             for agent in self.environment.get_agents():
                 if(type(agent) is Rock):
-                    if (agent.getter() == self.getter()):
+                    if ((agent.getter() == self.getter()) and (agent not in self.ship.collected_rocks)):
                         self.inventory = agent
-                        agent.setter = None
+                        self.ship.collected_rocks = self.ship.collected_rocks + [agent,]
+                        agent.setter(-1, -1)
                         self.mode = 1
                         print("Carrying Rock")
     

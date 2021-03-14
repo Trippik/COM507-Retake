@@ -17,7 +17,7 @@ class Simulation:
         self.ship.set_environment(self.mars)
         while(no_rovers > 0):
             rover_coor = self.generate_coordinates()
-            rover_new = Rover(rover_coor, ship_coor, 100)
+            rover_new = Rover(rover_coor, self.ship, 100)
             rover_new.set_environment(self.mars)
             no_rovers = no_rovers - 1
         while(no_rocks > 0):
@@ -38,7 +38,6 @@ class Simulation:
             for agent in agents:
                 agent.act()
             loops = loops - 1
-            print(str(self.ship.inventory))
         agents = self.mars.get_agents()
         results = []
         for agent in agents:

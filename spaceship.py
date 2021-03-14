@@ -6,6 +6,7 @@ from rover import Rover
 class Spaceship(Agent):
     def __init__(self, ship_position):
         self.inventory = []
+        self.collected_rocks = []
         super().__init__(ship_position[0], ship_position[1])
     
     #Scan specifc cell for rover, if found empty inventory and recharge
@@ -18,6 +19,7 @@ class Spaceship(Agent):
                     if(agent.inventory != None):
                         print("Rock Delivered to Spaceship")
                         self.inventory = self.inventory + [agent.inventory, ]
+                        agent.inventory = None
                         agent.mode = 0
                 agent.battery_level = 100
 
