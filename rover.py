@@ -32,7 +32,6 @@ class Rover(Agent):
                         self.ship.collected_rocks = self.ship.collected_rocks + [agent,]
                         agent.setter(-1, -1)
                         self.mode = 1
-                        print("Carrying Rock")
     
     def scan(self, targets, item):
         agents = self.environment.get_agents()
@@ -94,7 +93,6 @@ class Rover(Agent):
             else:
                 vector = self.generate_vector()
         elif(self.mode == 1):
-            print("Returning to Spaceship")
             rover_loc = self.getter()
             x_raw = self.ship_position[0] - rover_loc[0]
             y_raw = self.ship_position[1] - rover_loc[1]

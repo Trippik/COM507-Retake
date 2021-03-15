@@ -27,8 +27,6 @@ class Gui(tk.Tk):
     def iterate(self):
         results = self.sim.run(1)
         final = []
-        print("Ship Inventory: " + str(len(self.sim.ship.inventory)) + "/25")
-        print("Collected Rocks: " + str(len(self.sim.ship.collected_rocks)) + "/25")
         for result in results:
             agent_type = result[0]
             coordinates = result[1]
